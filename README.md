@@ -1,6 +1,6 @@
 # SLKM — Transport et Logistique
 
-Connexion administrateur : voir [le diagnostic et la procédure du premier administrateur](docs/ADMIN-AUTH.md). Le compte Auth et son UUID dans `admin_users` sont distincts de l’email de contact. Aucun mot de passe par défaut. Les vérifications d’authentification se lancent avec `npm run test:auth` (API locale simulée, aucun compte réel) et `npm run auth:diagnostics` (lecture distante uniquement, sans clés dans les logs).
+Connexion administrateur : créez l’utilisateur dans Supabase Auth, ajoutez son UUID dans `admin_users` (voir plus bas), puis connectez-vous à `/admin/login`. Le compte Auth et son UUID sont distincts de l’email de contact. Aucun mot de passe par défaut. Les vérifications d’authentification se lancent avec `npm run test:auth` (API locale simulée, aucun compte réel) et `npm run auth:diagnostics` (lecture distante uniquement, sans clés dans les logs).
 
 Identité d’interface actuelle : bleu `#08648B`, bleu de marque `#0865B8`, bleu nuit `#101C33`, orange `#C46200` (survol `#A95000`), fond `#F6F8FA`, cartes `#FFFFFF`, bordures `#E3E8EF`, texte `#111827`, secondaire `#6B7789`. Logos et photos ne sont pas recolorés. Le thème porte `theme_version=2` : un ancien thème sauvegardé ne peut plus réintroduire ses couleurs. Pour une base installée jusqu’à 004, appliquer uniquement `202611030005_blue_orange_theme.sql`. Elle remplace les champs de palette et retire l’ancien accent jaune ; les contacts, textes, médias et autres paramètres sont conservés. Après cette mise à niveau, les couleurs personnalisées sauvegardées dans le dashboard prennent la priorité et sont conservées lors d’une nouvelle exécution de la migration.
 
@@ -32,7 +32,7 @@ Ne jamais versionner `.env.local`. Les modules privilégiés sont marqués `serv
 ## Configuration Supabase
 
 1. Créer ou sélectionner **le projet cible**, sauvegarder une base existante et examiner les objets avant application. Le dossier de travail initial était vide ; le SQL ne remplace aucune ancienne migration.
-2. Dans le SQL Editor du projet identifié, exécuter les fichiers de `supabase/migrations/` dans l’ordre numérique (001 à 005), puis `supabase/seed.sql`. Avec Supabase CLI, utiliser le flux habituel de migrations après liaison explicite au bon projet. Aucun `db reset` requis.
+2. Dans le SQL Editor du projet identifié, exécuter tous les fichiers de `supabase/migrations/` dans l’ordre de leur nom, puis `supabase/seed.sql`. Avec Supabase CLI, utiliser le flux habituel de migrations après liaison explicite au bon projet. Aucun `db reset` requis.
 3. Dans Authentication, désactiver les inscriptions publiques et configurer l’URL du site. Le site n’expose aucune inscription.
 4. Créer manuellement le premier utilisateur dans Authentication (adresse réelle, mot de passe fort choisi par vous), récupérer son UUID, puis exécuter avec un compte de confiance :
 
@@ -85,13 +85,13 @@ Hébergement Next.js Node compatible (Vercel ou équivalent), variables de produ
 
 ## Avant publication
 
-Ajouter les photos/logos réels, confirmer le domaine, compléter l’identité légale et la politique de confidentialité (pages explicitement marquées à compléter), vérifier les deux langues et tester les droits avec Supabase. Instagram, adresse, lien HM Studio, historique et lignes restent absents tant qu’ils ne sont pas fournis. Le fichier Noda n’étant pas disponible, ne pas prétendre l’utiliser. Les fontes disponibles et les limites de vérification sont consignées dans `VERIFICATION.md`.
+Ajouter les photos/logos réels, confirmer le domaine, compléter l’identité légale et la politique de confidentialité (pages explicitement marquées à compléter), vérifier les deux langues et tester les droits avec Supabase. Instagram, adresse, lien HM Studio, historique et lignes restent absents tant qu’ils ne sont pas fournis. Le fichier Noda n’étant pas disponible, ne pas prétendre l’utiliser.
 
 ## Vérification navigateur
 
 Après lancement du serveur, `npm run test:ui` teste Microsoft Edge installé localement. Par défaut le test utilise http://127.0.0.1:3030 ; définir `TEST_URL` pour une autre origine. Exemple : `$env:TEST_URL="http://127.0.0.1:3000"`. Les captures sont enregistrées dans `artifacts/`. `test:sql` utilise Postgres embarqué PGlite avec un schéma Auth/Storage de test : ce contrôle ne configure ni ne teste un projet Supabase distant.
 
-Typographie embarquée : Plus Jakarta Sans (FR) et Cairo (AR), via next/font/local, avec notices de licence dans app/fonts. Aucun fichier Noda n’était disponible. Voir docs/MEDIA.md pour la provenance et les médias manquants.
+Typographie embarquée : Plus Jakarta Sans (FR) et Cairo (AR), via next/font/local, avec notices de licence dans app/fonts. Aucun fichier Noda n’était disponible.
 
 `npm run test:interactions` vérifie également le défilement automatique réel, la pause/reprise, le menu au clavier et le bouton WhatsApp près du formulaire (même variable TEST_URL).
 #   s l k m t r a n s p o r t c a r  

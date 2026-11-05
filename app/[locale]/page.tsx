@@ -7,7 +7,6 @@ import { Organization } from '@/components/organization';
 import { NetworkRecords } from '@/components/network-records';
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider } from 'next-intl';
 import { ArrowRight, ArrowUpRight, Bus, Package, Users, Compass, Truck, Phone, Mail, Check, MapPin } from 'lucide-react';
 import { getContent, preview } from '@/lib/content';
 import { field, label, type Locale, type RecordData } from '@/lib/model';
@@ -53,7 +52,7 @@ export default async function PublicPage({ params }: {
     <p className="eyebrow">{field(row, 'eyebrow', locale)}</p>
     <h2>{label(row, locale)}</h2>
     </> : null;
-    return <NextIntlClientProvider locale={locale} messages={{}} formats={{}} now={new Date()} timeZone="Africa/Casablanca">
+    return <>
     <div className={`public-site ${field(s, 'font') === 'system' ? 'system-font' : ''}`} style={themeStyle(s?.data)}>
     <a className="skip" href="#main">{ar ? 'انتقل إلى المحتوى' : 'Aller au contenu'}</a>
     <header className="site-header">
@@ -241,5 +240,5 @@ export default async function PublicPage({ params }: {
     </footer>
     <FloatingContact href={whatsapp} locale={locale}/>
     </div>
-    </NextIntlClientProvider>;
+    </>;
 }
