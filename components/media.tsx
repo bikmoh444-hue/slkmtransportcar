@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import Image from './resilient-image';
 import { Bus, ImageIcon } from 'lucide-react';
 export function Media({ src, mobileSrc, alt, hero = false, contain = false, focal = '50% 50%' }: {
     src?: string;

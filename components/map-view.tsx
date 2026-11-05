@@ -3,7 +3,7 @@ import { useRef } from 'react';
 import { Maximize2, X } from 'lucide-react';
 import type { Locale } from '@/lib/model';
 import { Media } from './media';
-import Image from 'next/image';
+import Image from './resilient-image';
 export function MapView({ src, title, locale }: {
     src: string;
     title: string;
