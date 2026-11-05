@@ -8,6 +8,7 @@ export async function POST(req:NextRequest) {
   const fail=(status:number)=>NextResponse.json({error:'Enregistrement indisponible / التسجيل غير متاح'},{status,headers:{'Cache-Control':'no-store'}});
   if(process.env.SLKM_PREVIEW==='true'||!configured()||!process.env.SUPABASE_SERVICE_ROLE_KEY||(process.env.RATE_LIMIT_SECRET?.length||0)<32)return fail(503);
   if(!allowedPublicOrigin(req))return fail(403);
+  if(req.headers.get('content-type')?.split(';',1)[0].trim().toLowerCase()!=='application/json')return fail(415);
   let parsed;
   try {parsed=complaintSchema.safeParse(await readBoundedJson(req,16000))}
   catch(error){return fail(error instanceof RequestBodyError?error.status:400)}

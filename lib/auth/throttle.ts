@@ -1,3 +1,4 @@
+import 'server-only';
 import {privateRateKey,trustedClientIdentity} from '../security/network.ts';
 type Environment=Record<string,string|undefined>;
 export type LoginLimitDb={rpc:(name:string,args:Record<string,string>)=>PromiseLike<{data:unknown;error:unknown}>};

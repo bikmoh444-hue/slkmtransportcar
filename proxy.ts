@@ -3,9 +3,14 @@ import {NextResponse,type NextRequest} from 'next/server';
 import {supabaseConfig} from './lib/auth/config';
 import {authCookieOptions} from './lib/auth/cookies';
 import {classifyAuthError,logAuthFailure} from './lib/auth/errors';
+import {contentSecurityPolicy} from './lib/security/headers';
 
 export async function proxy(request:NextRequest){
+ const nonce=crypto.randomUUID().replace(/-/g,'');
+ const csp=contentSecurityPolicy(nonce);
  const requestHeaders=new Headers(request.headers);
+ requestHeaders.set('x-nonce',nonce);
+ requestHeaders.set('Content-Security-Policy',csp);
  requestHeaders.set('x-locale',(request.nextUrl.pathname.startsWith('/ar')||(request.nextUrl.pathname.startsWith('/admin')&&request.cookies.get('slkm-admin-locale')?.value==='ar'))?'ar':'fr');
  // These internal hints are always overwritten; they never confer authorization.
  requestHeaders.delete('x-slkm-session-error');
@@ -31,9 +36,10 @@ export async function proxy(request:NextRequest){
   }}catch(error){const failure=classifyAuthError(error,'session_refresh');requestHeaders.set('x-slkm-session-error',failure.code);logAuthFailure(failure)}
  }
  const response=NextResponse.next({request:{headers:requestHeaders}});
+ response.headers.set('Content-Security-Policy',csp);
  for(const [name,{value,options}]of outgoing)response.cookies.set(name,value,options);
  for(const [name,value]of cacheHeaders)response.headers.set(name,value);
  if(privateRoute){response.headers.set('Cache-Control','private, no-store, max-age=0, must-revalidate');response.headers.set('Pragma','no-cache');response.headers.set('Expires','0')}
  return response;
 }
-export const config={matcher:['/fr/:path*','/ar/:path*','/admin/:path*']};
+export const config={matcher:[{source:'/((?!api|_next/static|_next/image|favicon.ico|.*\\..*).*)',missing:[{type:'header',key:'next-router-prefetch'},{type:'header',key:'purpose',value:'prefetch'}]}]};

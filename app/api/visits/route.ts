@@ -8,6 +8,7 @@ export async function POST(req:NextRequest){
  const result=(status:number)=>new NextResponse(null,{status,headers:{'Cache-Control':'no-store'}});
  if(!configured()||process.env.SLKM_PREVIEW==='true'||!process.env.SUPABASE_SERVICE_ROLE_KEY||(process.env.RATE_LIMIT_SECRET?.length||0)<32)return result(503);
  if(!allowedPublicOrigin(req))return result(403);
+ if(req.headers.get('content-type')?.split(';',1)[0].trim().toLowerCase()!=='application/json')return result(415);
  let parsed;
  try{parsed=schema.safeParse(await readBoundedJson(req,1500))}catch(error){return result(error instanceof RequestBodyError?error.status:400)}
  if(!parsed.success)return result(400);

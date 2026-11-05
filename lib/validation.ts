@@ -4,7 +4,7 @@ function localStorageImage(value:string) {
     catch {return false;}
 }
 export const safeLink = z.string().max(500).refine(v => !v || /^#[a-z][a-z0-9-]*$/i.test(v) || /^\/(fr|ar)(\/|#|$)/.test(v) || /^https:\/\/[^\s<>]+$/i.test(v) || /^tel:\+?[0-9]+$/.test(v) || /^mailto:[^\s<>@]+@[^\s<>@]+$/.test(v), 'Lien invalide');
-export const complaintSchema = z.object({ full_name: z.string().trim().min(2).max(120), email: z.email().max(254), message: z.string().trim().min(10).max(5000), locale: z.enum(['fr', 'ar']), website: z.string().max(0) });
+export const complaintSchema = z.object({ full_name: z.string().trim().min(2).max(120), email: z.email().max(254), message: z.string().trim().min(10).max(5000), locale: z.enum(['fr', 'ar']), website: z.string().max(0) }).strict();
 export const rowSchema = z.object({ id: z.string().uuid().optional(), origin_city_id: z.uuid().nullable().optional(), destination_city_id: z.uuid().nullable().optional(), city_id: z.uuid().nullable().optional(), key: z.string().regex(/^[a-z][a-z0-9_-]{0,79}$/), label_fr: z.string().max(500), label_ar: z.string().max(500), sort_order: z.number().int().min(0).max(10000), is_active: z.boolean(), data: z.record(z.string(), z.unknown()) }).superRefine((row, ctx) => { if (row.is_active && (!row.label_fr.trim() || !row.label_ar.trim()))
     ctx.addIssue({ code: 'custom', message: 'Titres FR et AR requis / العنوانان مطلوبان', path: ['label_fr'] }); if (row.data.seats != null && (!Number.isInteger(row.data.seats) || Number(row.data.seats) < 1 || Number(row.data.seats) > 100))
     ctx.addIssue({ code: 'custom', message: 'Capacité invalide / سعة غير صالحة', path: ['data', 'seats'] }); if (row.data.icon && !['bus', 'package', 'users', 'compass', 'truck'].includes(String(row.data.icon)))

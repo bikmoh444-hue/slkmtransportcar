@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import sharp from 'sharp';
 import {readBoundedJson,RequestBodyError} from '../lib/security/body.ts';
 import {trustedClientIdentity,privateRateKey} from '../lib/security/network.ts';
-import {additionalSecurityHeaders} from '../lib/security/headers.ts';
+import {additionalSecurityHeaders,contentSecurityPolicy} from '../lib/security/headers.ts';
 import {settingsWriteError,publicIdentity,publicSettingsData,identityWriteError} from '../lib/security/settings.ts';
 import {prepareRaster} from '../lib/security/media.ts';
 import {reserveLoginAttempt} from '../lib/auth/throttle.ts';
@@ -65,13 +65,20 @@ test('settings: valid identity unchanged, public allowlist, no missing-row crash
   assert.ok(settingsWriteError({unknown:'new'}));assert.equal(settingsWriteError({unknown:'legacy'},{unknown:'legacy'}),undefined);
   assert.deepEqual(publicSettingsData({phone:'public',unknown:'internal'}),{phone:'public'});
 });
-test('headers: report only, no premature CSP enforcement or HSTS',()=>{
-  const headers=additionalSecurityHeaders({NODE_ENV:'production',NEXT_PUBLIC_SUPABASE_URL:'https://storage.invalid'});
-  assert.ok(headers.find(h=>h.key==='Content-Security-Policy-Report-Only')?.value.includes('https://storage.invalid'));
-  assert.ok(!headers.some(h=>['Content-Security-Policy','Strict-Transport-Security'].includes(h.key)));
+test('headers: nonce CSP is enforced, scripts reject inline/eval in production, HSTS only when confirmed',()=>{
+  const env={NODE_ENV:'production',NEXT_PUBLIC_SUPABASE_URL:'https://storage.invalid',NEXT_PUBLIC_SITE_URL:'https://site.invalid'};
+  const policy=contentSecurityPolicy('test-nonce',env);
+  assert.match(policy,/script-src 'self' 'nonce-test-nonce' 'strict-dynamic'/);
+  assert.doesNotMatch(policy,/script-src[^;]*'unsafe-inline'/);
+  assert.doesNotMatch(policy,/script-src[^;]*'unsafe-eval'/);
+  assert.match(policy,/img-src[^;]*https:\/\/storage\.invalid/);
+  assert.match(policy,/upgrade-insecure-requests/);
+  assert.doesNotMatch(contentSecurityPolicy('n',{...env,NODE_ENV:'development'}),/script-src[^;]*'unsafe-inline'/);
+  assert.match(contentSecurityPolicy('n',{...env,NODE_ENV:'development'}),/'unsafe-eval'/);
   const configured=additionalSecurityHeaders({NODE_ENV:'production',NEXT_PUBLIC_SITE_URL:'https://site.invalid',SLKM_HSTS_ENABLED:'true'});
   assert.equal(configured.find(h=>h.key==='Strict-Transport-Security')?.value,'max-age=86400');
   assert.ok(!additionalSecurityHeaders({NODE_ENV:'production',NEXT_PUBLIC_SITE_URL:'http://site.invalid',SLKM_HSTS_ENABLED:'true'}).some(h=>h.key==='Strict-Transport-Security'));
+  assert.ok(!contentSecurityPolicy('n',{...env,NEXT_PUBLIC_SITE_URL:'http://127.0.0.1:3000'}).includes('upgrade-insecure-requests'));
 });
 test('raster uploads: decode true format, keep transparency, support AVIF, reject disguised SVG and oversized files',async()=>{
   const source=sharp({create:{width:16,height:12,channels:4,background:{r:20,g:50,b:100,alpha:0.4}}});
