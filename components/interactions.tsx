@@ -13,9 +13,42 @@ export function Navigation({ items, locale }: {
     locale: Locale;
 }) {
     const [open, setOpen] = useState(false);
+    const [active, setActive] = useState('#accueil');
+    const toggle = useRef<HTMLButtonElement>(null);
+    const nav = useRef<HTMLElement>(null);
+    useEffect(() => {
+        const sync = () => setActive(location.hash || '#accueil');
+        sync();
+        window.addEventListener('hashchange', sync);
+        return () => window.removeEventListener('hashchange', sync);
+    }, []);
+    useEffect(() => {
+        if (!open) return;
+        const close = (event: KeyboardEvent) => {
+            if (event.key === 'Escape') { setOpen(false); toggle.current?.focus(); }
+        };
+        const outside = (event: PointerEvent) => {
+            if (event.target instanceof Node && !nav.current?.contains(event.target) && !toggle.current?.contains(event.target)) setOpen(false);
+        };
+        const focus = (event: FocusEvent) => {
+            if (event.target instanceof Node && !nav.current?.contains(event.target) && !toggle.current?.contains(event.target)) setOpen(false);
+        };
+        const desktop = matchMedia('(min-width: 1151px)');
+        const resize = () => { if (desktop.matches) setOpen(false); };
+        document.addEventListener('keydown', close);
+        document.addEventListener('pointerdown', outside);
+        document.addEventListener('focusin', focus);
+        desktop.addEventListener('change', resize);
+        return () => {
+            document.removeEventListener('keydown', close);
+            document.removeEventListener('pointerdown', outside);
+            document.removeEventListener('focusin', focus);
+            desktop.removeEventListener('change', resize);
+        };
+    }, [open]);
     return <>
-    <button className="menu-toggle icon-button" aria-expanded={open} aria-controls="main-nav" aria-label={locale === 'fr' ? 'Menu de navigation' : 'قائمة التنقل'} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
-    <nav id="main-nav" className={open ? 'open' : ''}>{items.map(x => <a key={x.key} href={field(x, 'target')} onClick={() => setOpen(false)}>{label(x, locale)}</a>)}</nav>
+    <button ref={toggle} className="menu-toggle icon-button" aria-expanded={open} aria-controls="main-nav" aria-label={locale === 'fr' ? 'Menu de navigation' : 'قائمة التنقل'} onKeyDown={e => { if (e.key === 'ArrowDown') { e.preventDefault(); setOpen(true); requestAnimationFrame(() => nav.current?.querySelector('a')?.focus()); } }} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
+    <nav ref={nav} id="main-nav" aria-label={locale === 'fr' ? 'Menu de navigation' : 'قائمة التنقل'} className={open ? 'open' : ''}>{items.map((x, i) => <a key={x.key} style={{ '--nav-index': i } as React.CSSProperties} href={field(x, 'target')} aria-current={active === field(x, 'target') ? 'location' : undefined} onClick={() => { setActive(field(x, 'target')); setOpen(false); if (matchMedia('(max-width: 1150px)').matches) toggle.current?.focus(); }}>{label(x, locale)}</a>)}</nav>
     </>;
 }
 export function Hero({ slides, locale }: {
@@ -41,7 +74,7 @@ export function Hero({ slides, locale }: {
     <Media src={field(current, 'image')} mobileSrc={field(current, 'mobile_image')} alt={field(current, 'alt', locale) || label(current, locale)} hero focal={field(current, 'focal')} mobileFocal={field(current, 'mobile_focal')}/>
     </div>
     <div className="hero-shade"/>
-    <div className="container hero-content">
+    <div className="container hero-content" key={`content-${current.key}`}>
     <p className="eyebrow light">
     <span />{field(current, 'label', locale)}</p>
     <h1>{label(current, locale)}</h1>

@@ -93,8 +93,6 @@ export default async function PublicPage({ params }: {
                 return <section className="container section story two-col" id={k} key={k}>
                 <div className="story-photo">
                 <Media src={field(row, 'image')} alt={ar ? 'مركبات SLKM' : 'Véhicules SLKM'}/>
-                <div className="photo-tag">
-                <span>SLKM</span>{ar ? 'النقل والخدمات اللوجستية' : 'Transport & Logistique'}</div>
                 </div>
                 <div>{title(row)}<p>{field(row, 'body', locale)}</p>
                 <p>{field(row, 'second', locale)}</p>{Array.isArray(row.data[`milestones_${locale}`]) && (row.data[`milestones_${locale}`] as string[]).length > 0 && <ol className="timeline">{(row.data[`milestones_${locale}`] as string[]).map(x => <li key={x}>{x}</li>)}</ol>}<div className="values">{(row.data[`values_${locale}`] as string[] || []).map(x => <span key={x}>
