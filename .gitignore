@@ -1,0 +1,8 @@
+node_modules/
+.next/
+.env*
+!.env.example
+artifacts/
+*.tsbuildinfo
+.npm-cache/
+media-source/

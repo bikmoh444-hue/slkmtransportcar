@@ -1,0 +1,9 @@
+[
+ {"key":"logo","file":"media-source/logo.png","destination":"brand/logo.webp","role":"Logo horizontal navbar","alt_fr":"SLKM — نقل مولاي مبارك","alt_ar":"SLKM — نقل مولاي مبارك","status":"missing"},
+ {"key":"footer-logo","file":"media-source/footer-logo.png","destination":"brand/footer-logo.webp","role":"Variante logo footer","alt_fr":"SLKM — Transport et Logistique","alt_ar":"SLKM — النقل والخدمات اللوجستية","status":"missing"},
+ {"key":"coaches","file":"media-source/coaches.jpg","destination":"fleet/coaches.webp","role":"Hero voyageurs, services et flotte","alt_fr":"Autocars SLKM","alt_ar":"حافلات SLKM","status":"missing"},
+ {"key":"minibuses","file":"media-source/minibuses.jpg","destination":"fleet/minibuses.webp","role":"Hero personnel et tourisme, présentation, flotte","alt_fr":"Minibus SLKM","alt_ar":"حافلات SLKM الصغيرة","status":"missing"},
+ {"key":"trucks","file":"media-source/trucks.jpg","destination":"fleet/trucks.webp","role":"Hero logistique, services et flotte","alt_fr":"Camions-bennes SLKM","alt_ar":"شاحنات SLKM القلابة","status":"missing"},
+ {"key":"network-poster","file":"media-source/network-poster.jpg","destination":"network/passengers.webp","role":"Affiche réseau voyageurs, affichage sans recadrage","alt_fr":"Affiche du réseau voyageurs SLKM","alt_ar":"ملصق شبكة نقل المسافرين SLKM","status":"missing"},
+ {"key":"parcel-map","file":"media-source/parcel-map.jpg","destination":"network/parcels.webp","role":"Carte messagerie, affichage sans recadrage","alt_fr":"Carte du réseau de messagerie SLKM","alt_ar":"خريطة شبكة نقل الطرود SLKM","status":"missing"}
+]

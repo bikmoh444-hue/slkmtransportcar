@@ -1,0 +1,48 @@
+{
+  "name": "slkm",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev --hostname 127.0.0.1",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "media:import": "node --env-file=.env.local scripts/import-media.mjs",
+    "test:sql": "node tests/database.mjs",
+    "test:ui": "node tests/browser.mjs",
+    "seed:generate": "node --experimental-strip-types scripts/generate-seed.ts",
+    "test:interactions": "node tests/interactions.mjs",
+    "test:auth": "node --experimental-strip-types tests/auth-browser.mjs",
+    "auth:diagnostics": "node --env-file=.env.local --experimental-strip-types scripts/auth-diagnostics.mjs"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.118.0",
+    "lucide-react": "1.63.0",
+    "next": "16.2.10",
+    "next-intl": "4.14.9",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "server-only": "0.0.1",
+    "sharp": "0.34.5",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.13",
+    "@tailwindcss/postcss": "4.3.3",
+    "@types/node": "22.20.5",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "eslint": "9.39.5",
+    "eslint-config-next": "16.2.10",
+    "playwright": "1.64.1",
+    "tailwindcss": "4.3.3",
+    "typescript": "5.9.3"
+  },
+  "type": "module",
+  "engines": {
+    "node": ">=22.13.0"
+  }
+}

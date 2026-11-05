@@ -1,0 +1,4 @@
+﻿'use client';
+import {useEffect} from 'react';
+import {usePathname} from 'next/navigation';
+export function VisitTracker(){const path=usePathname();useEffect(()=>{if(navigator.doNotTrack==='1')return;try{const now=Date.now();let visitor=localStorage.getItem('slkm-visitor');const expires=Number(localStorage.getItem('slkm-visitor-expiry'));if(!visitor||expires<now){visitor=crypto.randomUUID();localStorage.setItem('slkm-visitor',visitor);localStorage.setItem('slkm-visitor-expiry',String(now+30*86400000))}let session=sessionStorage.getItem('slkm-session');if(!session){session=crypto.randomUUID();sessionStorage.setItem('slkm-session',session)}void fetch('/api/visits',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({visitor,session,path}),keepalive:true}).catch(()=>{});}catch{/* Tracking remains optional when browser storage is disabled. */}},[path]);return null}
