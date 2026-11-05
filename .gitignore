@@ -6,3 +6,8 @@ artifacts/
 *.tsbuildinfo
 .npm-cache/
 media-source/
+
+# private
+supabase/
+.env*
+!.env.example
