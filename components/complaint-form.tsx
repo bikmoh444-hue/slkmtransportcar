@@ -1,7 +1,6 @@
 'use client';
 import { useRef, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { complaintSchema } from '@/lib/validation';
 import type { Locale } from '@/lib/model';
 export function ComplaintForm({ locale, available }: {
     locale: Locale;
@@ -31,16 +30,26 @@ export function ComplaintForm({ locale, available }: {
             if (sending.current || !available)
                 return;
             const form = event.currentTarget;
-            const values = { ...Object.fromEntries(new FormData(form)), locale };
-            const parsed = complaintSchema.safeParse(values);
+            const data = new FormData(form);
+            const values = {
+                full_name: String(data.get('full_name') || '').trim(),
+                email: String(data.get('email') || '').trim(),
+                message: String(data.get('message') || '').trim(),
+                locale,
+                website: String(data.get('website') || '')
+            };
             setResult('');
             setSuccess(false);
-            if (!parsed.success) {
-                const next: Record<string, string> = {};
-                for (const issue of parsed.error.issues) {
-                    const key = String(issue.path[0]);
-                    next[key] = key === 'full_name' ? copy.nameError : key === 'email' ? copy.emailError : copy.messageError;
-                }
+            const next: Record<string, string> = {};
+            if (values.full_name.length < 2 || values.full_name.length > 120)
+                next.full_name = copy.nameError;
+            if (values.email.length > 254 || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email))
+                next.email = copy.emailError;
+            if (values.message.length < 10 || values.message.length > 5000)
+                next.message = copy.messageError;
+            if (values.website)
+                next.website = copy.messageError;
+            if (Object.keys(next).length) {
                 setErrors(next);
                 const first = form.elements.namedItem(Object.keys(next)[0]);
                 if (first instanceof HTMLElement)
@@ -51,7 +60,7 @@ export function ComplaintForm({ locale, available }: {
             sending.current = true;
             setBusy(true);
             try {
-                const response = await fetch('/api/complaints', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(parsed.data) });
+                const response = await fetch('/api/complaints', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(values) });
                 if (!response.ok) {
                     setResult(response.status === 429 ? copy.limited : copy.failure);
                     return;

@@ -5,7 +5,20 @@ import type { Locale, RecordData } from '@/lib/model';
 import { label, field } from '@/lib/model';
 export function Language({ locale }: {
     locale: Locale;
-}) { return <a className="language" href={locale === 'fr' ? '/ar' : '/fr'} onClick={e => { e.preventDefault(); location.href = `/${locale === 'fr' ? 'ar' : 'fr'}${location.hash}`; }} lang={locale === 'fr' ? 'ar' : 'fr'}>{locale === 'fr' ? 'العربية' : 'FR'}</a>; }
+}) {
+    const [hash, setHash] = useState('');
+    useEffect(() => {
+        const sync = () => setHash(location.hash);
+        sync();
+        window.addEventListener('hashchange', sync);
+        window.addEventListener('popstate', sync);
+        return () => {
+            window.removeEventListener('hashchange', sync);
+            window.removeEventListener('popstate', sync);
+        };
+    }, []);
+    return <a className="language" href={`/${locale === 'fr' ? 'ar' : 'fr'}${hash}`} lang={locale === 'fr' ? 'ar' : 'fr'}>{locale === 'fr' ? 'العربية' : 'FR'}</a>;
+}
 export function Navigation({ items, locale }: {
     items: RecordData[];
     locale: Locale;

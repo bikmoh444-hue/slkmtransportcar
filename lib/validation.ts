@@ -1,3 +1,4 @@
+import 'server-only';
 import { z } from 'zod';
 function localStorageImage(value:string) {
     try {const url=new URL(value);return url.protocol==='http:'&&['localhost','127.0.0.1','[::1]'].includes(url.hostname)&&url.pathname.startsWith('/storage/v1/object/public/slkm-media/')&&!url.username&&!url.password;}
