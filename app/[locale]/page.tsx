@@ -1,3 +1,5 @@
+import { ExpertiseGrid } from '@/components/expertise-grid';
+import { PublicMotion } from '@/components/public-motion';
 import {PublicContentRefresh} from '@/components/public-content-refresh';
 import {publicIdentity} from '@/lib/security/settings';
 import {VisitTracker} from '@/components/visit-tracker';
@@ -73,7 +75,7 @@ export default async function PublicPage({ params }: {
     </div>
     </div>
     </header>
-    <Organization settings={s}/><VisitTracker/><PublicContentRefresh/>
+    <PublicMotion/><Organization settings={s}/><VisitTracker/><PublicContentRefresh/>
     <main id="main">
     <Hero slides={c.hero_slides} locale={locale}/>{preview() && <div className="preview-note container">{ar ? 'معاينة محلية • الصور وSupabase في انتظار الإعداد' : 'Prévisualisation locale • Photos et Supabase à configurer'}</div>}<div className="container quick-links">
     <a href="#reseau">
@@ -108,15 +110,15 @@ export default async function PublicPage({ params }: {
                 <div className="container">
                 <div className="section-heading">
                 <div>{title(row)}</div>
-                <ScrollControls id="services-track" locale={locale}/>
+
                 </div>
                 {field(row,'body',locale)&&<p className="section-intro">{field(row,'body',locale)}</p>}<SectionExtras row={row} locale={locale}/>
-                <div className="services-grid snap-track" id="services-track">{c.services.map((service, i) => {
+                <ExpertiseGrid locale={locale}>{c.services.map((service, i) => {
                         const Icon = icons[field(service, 'icon') as keyof typeof icons] || Bus;
                         return <article className="service-card" key={service.key}>
                         <div className="service-image">
                         <Media src={field(service, 'image')} alt={field(service, 'alt', locale) || label(service, locale)}/>
-                        <span className="number">0{i + 1}</span>
+                        <span className="number">{String(i + 1).padStart(2, '0')}</span>
                         </div>
                         <div className="service-body">
                         <Icon size={23}/>
@@ -128,7 +130,7 @@ export default async function PublicPage({ params }: {
                         </a>
                         </div>
                         </article>;
-                    })}</div>
+                    })}</ExpertiseGrid>
                 </div>
                 </section>;
             if (k === 'reseau' || k === 'messagerie') {

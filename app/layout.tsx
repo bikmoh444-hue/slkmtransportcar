@@ -1,4 +1,5 @@
 import './globals.css';
+import './public-mobile.css';
 import localFont from 'next/font/local';
 import type { Metadata } from 'next';
 import { headers } from 'next/headers';

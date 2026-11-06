@@ -16,7 +16,16 @@ try{
  await page.locator('.menu-toggle').focus();await page.keyboard.press('Enter');
  assert.equal(await page.locator('#main-nav').isVisible(),true);
  await page.keyboard.press('Enter');assert.equal(await page.locator('#main-nav').isVisible(),false);
+ await page.locator('#histoire h2').evaluate(el=>el.scrollIntoView({block:'start',behavior:'instant'}));
+ await page.waitForFunction(()=>!document.querySelector('.whatsapp-float')?.hasAttribute('hidden'));
  assert.equal(await page.locator('.whatsapp-float').isVisible(),true);
+ await page.waitForFunction(()=>getComputedStyle(document.querySelector('#histoire h2')).opacity==='1');
+ await page.locator('.expertise-toggle').click();
+ await page.waitForTimeout(650);
+ assert.equal(await page.locator('#expertise-extra').getAttribute('aria-hidden'),'false');
+ await page.locator('.expertise-toggle').click();
+ await page.waitForTimeout(650);
+ assert.equal(await page.locator('#expertise-extra').evaluate(el=>el.getBoundingClientRect().height),0);
  await page.locator('.complaint').scrollIntoViewIfNeeded();
  await page.waitForFunction(()=>document.querySelector('.whatsapp-float')?.hasAttribute('hidden'));
  assert.equal(await page.locator('.whatsapp-float').isVisible(),false,'floating contact must not obscure the form');
