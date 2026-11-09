@@ -156,3 +156,18 @@
  .public-site .hero-shade { background:linear-gradient(90deg,color-mix(in srgb,var(--deep-blue) 65%,transparent),color-mix(in srgb,var(--deep-blue) 32%,transparent) 48%,color-mix(in srgb,var(--deep-blue) 4%,transparent)); }
 }
 .public-site .hero :is(h1,.hero-description,.eyebrow,.hero-secondary) { text-shadow:0 2px 12px rgb(0 0 0 / 45%); }
+/* Desktop follows the approved mobile expertise card design. */
+@media(min-width:581px) {
+ .public-site .expertise-showcase { max-width:860px; margin-inline:auto; }
+ .public-site .expertise-showcase .services-grid { gap:12px; }
+ .public-site .expertise-showcase .services-grid > .service-card:last-child:nth-child(odd) { width:calc((100% - 12px) / 2); }
+ .public-site .expertise-showcase .service-card { border-radius:16px; }
+ .public-site .expertise-showcase .service-image { aspect-ratio:1.4; }
+ .public-site .expertise-showcase .service-image .number { top:8px; inset-inline-start:8px; padding:3px 7px; font-size:10px; border-radius:7px; }
+ .public-site .expertise-showcase .service-body { padding:14px 12px; }
+ .public-site .expertise-showcase .service-body > svg { width:34px; height:34px; padding:8px; margin-bottom:10px; }
+ .public-site .expertise-showcase .service-body h3 { font-size:18px; line-height:1.5; overflow-wrap:anywhere; }
+ .public-site .expertise-showcase .service-body p { font-size:14px; line-height:1.8; margin-block:10px 14px; }
+ .public-site .expertise-showcase .text-link { font-size:12px; gap:4px; }
+ .public-site .expertise-showcase .text-link > svg { width:22px; height:22px; padding:3px; }
+}
