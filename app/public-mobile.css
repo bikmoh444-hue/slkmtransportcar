@@ -171,3 +171,30 @@
  .public-site .expertise-showcase .text-link { font-size:12px; gap:4px; }
  .public-site .expertise-showcase .text-link > svg { width:22px; height:22px; padding:3px; }
 }
+
+.public-site .expertise-showcase { max-width:100%; }
+.public-site .expertise-showcase .services-autoplay { display:flex; flex-wrap:nowrap; overflow-x:auto; gap:18px; scroll-snap-type:none; scroll-behavior:auto; scrollbar-width:thin; padding:8px 0 18px; }
+.public-site .expertise-showcase .services-autoplay > .service-card { flex:0 0 calc((100% - 36px)/3); width:auto; }
+@media(max-width:900px) { .public-site .expertise-showcase .services-autoplay > .service-card { flex-basis:calc((100% - 18px)/2); width:auto; } }
+@media(max-width:580px) { .public-site .expertise-showcase .services-autoplay > .service-card { flex-basis:86%; width:auto; } }
+
+
+/* Public-only stacking: decoration at 0, every page component at 1. */
+.public-background-shell { position:relative; isolation:isolate; min-height:100dvh; background:var(--surface); }
+.public-background-content { position:relative; z-index:1; }
+.animated-background-lines { position:fixed; inset:0; z-index:0; overflow:hidden; pointer-events:none; }
+.animated-background-lines__motion { position:absolute; inset:0; animation:slkm-background-glide 32s ease-in-out infinite alternate; will-change:transform; }
+.animated-background-lines__pair { position:absolute; top:48%; left:50%; width:240vmax; display:flex; flex-direction:column; gap:28px; transform:translate3d(-50%,-50%,0) rotate(-27deg); }
+.animated-background-lines__pair span { display:block; flex:none; height:12px; border-radius:999px; opacity:.18; background:linear-gradient(90deg,transparent,var(--logo-blue) 25%,var(--logo-blue) 75%,transparent); box-shadow:0 0 16px color-mix(in srgb,var(--logo-blue) 22%,transparent); }
+.animated-background-lines__pair span + span { background:linear-gradient(90deg,transparent,var(--orange) 25%,var(--orange) 75%,transparent); box-shadow:0 0 16px color-mix(in srgb,var(--orange) 22%,transparent); }
+/* Section surfaces let the decoration show through; cards retain opaque surfaces. */
+.public-background-shell .public-site :is(.services-section,.fleet-section) { background:color-mix(in srgb,var(--pale) 88%,transparent); }
+@keyframes slkm-background-glide { from { transform:translate3d(-3vw,-15vh,0); } to { transform:translate3d(3vw,15vh,0); } }
+@media(max-width:580px) {
+  .animated-background-lines__pair { gap:18px; }
+  .animated-background-lines__pair span { height:8px; opacity:.14; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .animated-background-lines__motion { animation:none; will-change:auto; }
+}
+.public-background-shell .public-site { background:transparent; }

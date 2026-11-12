@@ -17,7 +17,6 @@ import { Navigation, Language } from '@/components/navigation';
 const MapView = dynamic(() => import('@/components/map-view').then(module => module.MapView));
 const ScrollControls = dynamic(() => import('@/components/scroll-controls').then(module => module.ScrollControls));
 const ComplaintForm = dynamic(() => import('@/components/complaint-form').then(module => module.ComplaintForm));
-const FloatingContact = dynamic(() => import('@/components/floating-contact').then(module => module.FloatingContact));
 import { Media } from '@/components/media';
 import { Brand } from '@/components/social';
 import { configured } from '@/lib/supabase';
@@ -26,7 +25,7 @@ export async function generateMetadata({ params }: {
         locale: string;
     }>;
 }): Promise<Metadata> { const { locale } = await params; if (locale !== 'fr' && locale !== 'ar')
-    return {}; const content = await getContent(); const seo = content.seo_settings[0]; const url = process.env.NEXT_PUBLIC_SITE_URL; const icon = field(publicIdentity(content), 'favicon'); return { title: seo ? label(seo, locale) : 'SLKM', description: field(seo, 'description', locale), robots: { index: !!url && !preview(), follow: !!url && !preview() }, ...(icon ? { icons: { icon } } : {}), ...(url ? { metadataBase: new URL(url), alternates: { canonical: `/${locale}`, languages: { fr: '/fr', ar: '/ar', 'x-default': '/fr' } }, openGraph: { title: seo ? label(seo, locale) : 'SLKM', locale: locale === 'ar' ? 'ar_MA' : 'fr_MA', url: `/${locale}`, type: 'website', ...(field(seo, 'og_image') || field(publicIdentity(content), 'og_image') ? { images: [field(seo, 'og_image') || field(publicIdentity(content), 'og_image')] } : {}) } } : {}) }; }
+    return {}; const content = await getContent(); const seo = content.seo_settings[0]; const url = process.env.NEXT_PUBLIC_SITE_URL; const icon = '/icon.svg'; return { title: seo ? label(seo, locale) : 'SLKM', description: field(seo, 'description', locale), robots: { index: !!url && !preview(), follow: !!url && !preview() }, ...(icon ? { icons: { icon } } : {}), ...(url ? { metadataBase: new URL(url), alternates: { canonical: `/${locale}`, languages: { fr: '/fr', ar: '/ar', 'x-default': '/fr' } }, openGraph: { title: seo ? label(seo, locale) : 'SLKM', locale: locale === 'ar' ? 'ar_MA' : 'fr_MA', url: `/${locale}`, type: 'website', ...(field(seo, 'og_image') || field(publicIdentity(content), 'og_image') ? { images: [field(seo, 'og_image') || field(publicIdentity(content), 'og_image')] } : {}) } } : {}) }; }
 const icons = { bus: Bus, package: Package, users: Users, compass: Compass, truck: Truck };
 function SectionExtras({row,locale}:{row:RecordData;locale:Locale}) {
     return <>{field(row,'second',locale)&&<p className="section-extra-text">{field(row,'second',locale)}</p>}{field(row,'image')&&<div className="section-extra-media"><Media src={field(row,'image')} alt={label(row,locale)} contain/></div>}</>;
@@ -245,7 +244,6 @@ export default async function PublicPage({ params }: {
     <a href={`/${locale}/mentions-legales`}>{ar ? 'البيانات القانونية' : 'Mentions légales'}</a>
     </div>{field(s, 'studio_url') ? <a href={field(s, 'studio_url')}>By HM Studio</a> : <span>By HM Studio</span>}</div>
     </footer>
-    <FloatingContact href={whatsapp} locale={locale}/>
     </div>
     </>;
 }
